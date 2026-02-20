@@ -66,8 +66,9 @@ export function WithNoCloseButton(): JSX.Element {
     return <PropertyFiltersDisplay filters={[...propertyFilters]} />
 }
 
-const operatorGroups: { name: string; filters: AnyPropertyFilter[] }[] = [
+const operatorGroups: { id: string; name: string; filters: AnyPropertyFilter[] }[] = [
     {
+        id: 'multi-value',
         name: 'Multi-value (Exact / Is not)',
         filters: [
             { key: 'Browser', operator: PropertyOperator.Exact, type: 'event', value: ['Chrome', 'Safari', 'Edge'] },
@@ -75,6 +76,7 @@ const operatorGroups: { name: string; filters: AnyPropertyFilter[] }[] = [
         ] satisfies AnyPropertyFilter[],
     },
     {
+        id: 'text-contains',
         name: 'Text contains',
         filters: [
             { key: '$current_url', operator: PropertyOperator.IContains, type: 'event', value: 'checkout' },
@@ -82,6 +84,7 @@ const operatorGroups: { name: string; filters: AnyPropertyFilter[] }[] = [
         ] satisfies AnyPropertyFilter[],
     },
     {
+        id: 'regex',
         name: 'Regex',
         filters: [
             { key: '$pathname', operator: PropertyOperator.Regex, type: 'event', value: '^/api/v[0-9]+' },
@@ -89,6 +92,7 @@ const operatorGroups: { name: string; filters: AnyPropertyFilter[] }[] = [
         ] satisfies AnyPropertyFilter[],
     },
     {
+        id: 'numeric-comparison',
         name: 'Numeric comparison',
         filters: [
             { key: '$session_duration', operator: PropertyOperator.GreaterThan, type: 'event', value: 42 },
@@ -98,6 +102,7 @@ const operatorGroups: { name: string; filters: AnyPropertyFilter[] }[] = [
         ] satisfies AnyPropertyFilter[],
     },
     {
+        id: 'between',
         name: 'Between',
         filters: [
             { key: 'score', operator: PropertyOperator.Between, type: 'event', value: [10, 100] },
@@ -105,6 +110,7 @@ const operatorGroups: { name: string; filters: AnyPropertyFilter[] }[] = [
         ] satisfies AnyPropertyFilter[],
     },
     {
+        id: 'date',
         name: 'Date',
         filters: [
             { key: '$timestamp', operator: PropertyOperator.IsDateExact, type: 'event', value: '2024-06-15' },
@@ -113,6 +119,7 @@ const operatorGroups: { name: string; filters: AnyPropertyFilter[] }[] = [
         ] satisfies AnyPropertyFilter[],
     },
     {
+        id: 'set-not-set',
         name: 'Set / Not set',
         filters: [
             { key: 'email', operator: PropertyOperator.IsSet, type: 'event', value: 'is_set' },
@@ -125,13 +132,13 @@ export function OperatorVariantsEditing(): JSX.Element {
     useStorybookMocks({ get: { '/api/event/values/': [] } })
     return (
         <div className="space-y-6">
-            {operatorGroups.map(({ name, filters: groupFilters }) => (
-                <div key={name}>
+            {operatorGroups.map(({ id, name, filters: groupFilters }) => (
+                <div key={id}>
                     <h3>{name}</h3>
                     <PropertyFilters
                         propertyFilters={[...groupFilters]}
                         onChange={() => {}}
-                        pageKey={`operator-variants-${name}`}
+                        pageKey={`operator-variants-${id}`}
                         eventNames={[]}
                         disablePopover={true}
                     />
@@ -140,3 +147,4 @@ export function OperatorVariantsEditing(): JSX.Element {
         </div>
     )
 }
+
